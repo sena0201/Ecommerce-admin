@@ -1,6 +1,13 @@
+import Navbar from "@/Layout/Navbar";
+import { QueryClient } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
+import { Providers } from "./provider";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { useRouter } from "next/router";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +23,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body
+        className={
+          inter.className +
+          "font-Poppins min-h-screen flex bg-background relative"
+        }
+      >
+        <Providers>
+          <ToastContainer position="top-center" />
+          <Navbar />
+          <main className="p-14 w-full font-Poppins">
+            {children}
+          </main>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </Providers>
+      </body>
     </html>
   );
 }
