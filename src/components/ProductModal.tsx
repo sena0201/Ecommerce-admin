@@ -1,3 +1,4 @@
+import { SERVER_NAME } from "@/api/axiosConfig";
 import { deletePhoto, upload } from "@/api/photo-api";
 import {
   addProduct,
@@ -110,7 +111,7 @@ function ProductModal({
       queryClient.invalidateQueries({
         queryKey: ["products", page, searchValue],
       });
-      toast.success("Add product success");
+      toast.success("Update product success");
     },
     onError: (err) => {
       const axiosError = err as AxiosError;
@@ -157,7 +158,6 @@ function ProductModal({
       await uploadPhotoMutation.mutateAsync(file);
     }
   };
-  console.log(product);
   const handleCloseModal = () => {
     setProductId(undefined);
     setIsUpdate(false);
@@ -319,7 +319,7 @@ function ProductModal({
                       </span>
                     </div>
                     <Image
-                      src={image}
+                      src={SERVER_NAME + image}
                       alt=""
                       width={100}
                       height={100}

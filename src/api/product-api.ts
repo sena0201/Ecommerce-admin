@@ -62,7 +62,6 @@ export const updateProduct = async (
     photos: string[];
   }
 ) => {
-  console.log(productId);
   const res = await axiosClient.put<ProductType>(
     `/Product/${productId}`,
     data
