@@ -56,15 +56,22 @@ const productSchema = yup.object().shape({
   productName: yup
     .string()
     .required("This field is required"),
-  price: yup.number().required("This field is required"),
+  price: yup
+    .number()
+    .required("This field is required")
+    .typeError("This field is number")
+    .positive("This field is a positive number"),
   description: yup
     .string()
     .required("This field is required"),
   inventory: yup
     .number()
-    .required("This field is required"),
+    .required("This field is required")
+    .typeError("This field is number")
+    .positive("This field is a positive number"),
   categoryId: yup
     .number()
+    .positive("This field is required")
     .required("This field is required"),
 });
 
@@ -79,13 +86,22 @@ function ProductModal({
 }: IProps) {
   const [imageList, setImageList] = useState<string[]>([]);
 
-  const { handleSubmit, register, formState } = useForm({
-    resolver: yupResolver<Data>(productSchema),
-  });
-
-  const { data: product } = useGetById(id);
+  const { data: product, isLoading } = useGetById(id);
   const { data: categories } = useGetAll();
   const queryClient = useQueryClient();
+  const { handleSubmit, register, formState, setValue } =
+    useForm({
+      resolver: yupResolver<Data>(productSchema),
+    });
+  useEffect(() => {
+    if (product) {
+      setValue("categoryId", product.categoryId);
+      setValue("description", product.description);
+      setValue("inventory", product.inventory);
+      setValue("productName", product.productName);
+      setValue("price", product.price);
+    }
+  }, [product, setValue]);
 
   const addProductMutation = useMutation({
     mutationFn: (data: CreateData) => addProduct(data),
@@ -278,7 +294,7 @@ function ProductModal({
           <select
             className="w-full border-2 border-grey rounded-lg outline-none px-2 py-3 mt-4"
             {...register("categoryId")}
-            value={product?.categoryId}
+            defaultValue={product?.categoryId}
           >
             <option value="0">Select Category</option>
             {categories?.map((category: any) => (
@@ -291,7 +307,7 @@ function ProductModal({
             ))}
           </select>
           {formState.errors && (
-            <p className="text-red ml-2 mt-1">
+            <p className="text-red text-xs ml-2 mt-1">
               {formState.errors.categoryId?.message}
             </p>
           )}

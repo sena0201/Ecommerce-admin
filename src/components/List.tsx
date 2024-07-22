@@ -59,13 +59,15 @@ function List({
         <h1 className="text-2xl font-semibold">
           List of {title}
         </h1>
-        <button
-          className="flex gap-2 items-center py-5 px-6 bg-primary text-white rounded-2xl"
-          onClick={handleOpenModal}
-        >
-          <IoAddCircleSharp />
-          <span>Add New {title}</span>
-        </button>
+        {title !== "Order" && (
+          <button
+            className="flex gap-2 items-center py-5 px-6 bg-primary text-white rounded-2xl"
+            onClick={handleOpenModal}
+          >
+            <IoAddCircleSharp />
+            <span>Add New {title}</span>
+          </button>
+        )}
       </div>
       <div className="p-8 bg-link-hover mt-6 flex gap-2 rounded-xl">
         <div className="flex gap-2 items-center border-2 border-grey border-opacity-50 rounded-xl bg-white w-1/2">

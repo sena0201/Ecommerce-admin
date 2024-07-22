@@ -66,15 +66,20 @@ export const updateProduct = async (
     `/Product/${productId}`,
     data
   );
-  await axiosClient.delete<{ success: boolean }>(
+  const r = await axiosClient.delete<{ success: boolean }>(
     `/Photo/${productId}`
   );
-  data.photos.forEach(async (url) => {
-    await axiosClient.post("/Photo", { productId, url });
-  });
+  if (r.status === 200 || r.status === 404) {
+    data.photos.forEach(async (url) => {
+      await axiosClient.post("/Photo", { productId, url });
+    });
+  }
   return res.data;
 };
 export const deleteProduct = async (id: number) => {
-  const res = await axiosClient.delete(`/Product/${id}`);
-  return res.data;
+  const r = await axiosClient.delete(`/Photo/${id}`);
+  if (r.status === 404 || r.status === 200) {
+    const res = await axiosClient.delete(`/Product/${id}`);
+    return res.data;
+  }
 };

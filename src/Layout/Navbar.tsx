@@ -37,7 +37,7 @@ function Navbar() {
       </div>
       <p className="text-sm text-grey mt-5">MENU</p>
       <ul className="my-8">
-        <li>
+        {/* <li>
           <Link
             href={"Dashboard"}
             className="flex items-center gap-4 p-5 hover:bg-link-hover hover:text-primary hover:rounded-2xl"
@@ -45,6 +45,17 @@ function Navbar() {
             <LuLayoutDashboard className="text-xl" />
             {!isSmall && (
               <p className="font-medium">Dashboard</p>
+            )}
+          </Link>
+        </li> */}
+        <li>
+          <Link
+            href={"Supplier"}
+            className="flex items-center gap-4 p-5 hover:bg-link-hover hover:text-primary hover:rounded-2xl"
+          >
+            <BsHouseGear className="text-xl" />
+            {!isSmall && (
+              <p className="font-medium">Suppiler</p>
             )}
           </Link>
         </li>
@@ -81,18 +92,8 @@ function Navbar() {
             )}
           </Link>
         </li>
-        <li>
-          <Link
-            href={"Supplier"}
-            className="flex items-center gap-4 p-5 hover:bg-link-hover hover:text-primary hover:rounded-2xl"
-          >
-            <BsHouseGear className="text-xl" />
-            {!isSmall && (
-              <p className="font-medium">Suppiler</p>
-            )}
-          </Link>
-        </li>
-        <li>
+
+        {/* <li>
           <Link
             href={"User"}
             className="flex items-center gap-4 p-5 hover:bg-link-hover hover:text-primary hover:rounded-2xl"
@@ -102,7 +103,7 @@ function Navbar() {
               <p className="font-medium">User</p>
             )}
           </Link>
-        </li>
+        </li> */}
       </ul>
     </nav>
   );

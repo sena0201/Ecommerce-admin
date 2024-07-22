@@ -78,10 +78,10 @@ function SupplierPage() {
         />
       )}
       <h1 className="text-4xl font-semibold text-primary">
-        Category
+        Supplier
       </h1>
       <p className="text-grey font-semibold mt-2">
-        View all category
+        View all supplier
       </p>
       <List
         page={page}

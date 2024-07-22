@@ -9,7 +9,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { IoCloseSharp } from "react-icons/io5";
 import { MoonLoader } from "react-spinners";
@@ -54,7 +54,8 @@ function SupplierModal(props: IProps) {
   } = props;
 
   const queryClient = useQueryClient();
-  const { data: supplier } = useGetById(supplierId);
+  const { data: supplier, isLoading } =
+    useGetById(supplierId);
   const addSupplierMutation = useMutation({
     mutationFn: (data: Data) => addSupplier(data),
     onSuccess: () => {
@@ -83,9 +84,18 @@ function SupplierModal(props: IProps) {
     },
   });
 
-  const { handleSubmit, register, formState } = useForm({
-    resolver: yupResolver(supplierSchema),
-  });
+  const { handleSubmit, register, formState, setValue } =
+    useForm({
+      resolver: yupResolver(supplierSchema),
+    });
+  useEffect(() => {
+    if (supplier) {
+      setValue("supplierName", supplier.supplierName);
+      setValue("address", supplier.address);
+      setValue("email", supplier.email);
+      setValue("hotline", supplier.hotline);
+    }
+  }, [supplier, setValue]);
 
   const handleCloseModal = () => {
     setSupplierId(undefined);

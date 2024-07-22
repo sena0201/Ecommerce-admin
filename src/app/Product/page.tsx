@@ -1,5 +1,6 @@
 "use client";
 
+import { deleteProduct } from "@/api/product-api";
 import Modal from "@/components/CategoryModal";
 import List from "@/components/List";
 import ProductModal from "@/components/ProductModal";
@@ -9,6 +10,8 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { MoonLoader } from "react-spinners";
@@ -26,6 +29,7 @@ function ProductPage() {
     searchValue
   );
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const [pageSize, setPageSize] = useState<number>(5);
   const [pageCount, setPageCount] = useState<number>(0);
@@ -34,19 +38,21 @@ function ProductPage() {
   const handleOpenModal = () => {
     setIsOpen(!isOpen);
   };
+  const handleOpenDetail = (id: number) => {
+    router.push(`/Product/${id}`);
+  };
 
-  // const deleteCategoryMutation = useMutation({
-  //   mutationFn: (data: number) => deleteCategory(data),
-  //   onSuccess: () => {
-  //     toast.success("Delete successfully");
-  //     queryClient.invalidateQueries({
-  //       queryKey: ["categories", page],
-  //     });
-  //   },
-  //   onError: () => {
-  //     toast.error("Error deleting category");
-  //   },
-  // });
+  const deleteProductMutation = useMutation({
+    mutationFn: (data: number) => deleteProduct(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["products", page, searchValue],
+      });
+    },
+    onError: () => {
+      toast.error("Error");
+    },
+  });
 
   const handleUpdate = (id: number) => {
     setProductId(id);
@@ -81,10 +87,10 @@ function ProductPage() {
         />
       )}
       <h1 className="text-4xl font-semibold text-primary">
-        Category
+        Product
       </h1>
       <p className="text-grey font-semibold mt-2">
-        View all category
+        View all product
       </p>
       <List
         page={page}
@@ -123,7 +129,6 @@ function ProductPage() {
                 <th className="text-start pb-2">
                   Inventory
                 </th>
-                <th>Action</th>
 
                 <th className="pb-2">Option</th>
               </tr>
@@ -153,11 +158,18 @@ function ProductPage() {
                     <td className="truncate">
                       {product.inventory}
                     </td>
-                    <td className="flex justify-center">
-                      <button className="border-2 border-primary rounded-3xl px-2 py-1 text-primary hover:bg-primary hover:text-white">
+                    {/* <td className="flex justify-center">
+                      <button
+                        className="border-2 border-primary rounded-3xl px-2 py-1 text-primary hover:bg-primary hover:text-white"
+                        onClick={() =>
+                          handleOpenDetail(
+                            product.productId
+                          )
+                        }
+                      >
                         View
                       </button>
-                    </td>
+                    </td> */}
                     <td className="text-center">
                       <div className="flex justify-center relative group">
                         <BsThreeDotsVertical />
@@ -174,11 +186,11 @@ function ProductPage() {
                           </button>
                           <button
                             className="px-4 py-2 w-full text-white bg-red"
-                            // onClick={() =>
-                            //   deleteProductMutation.mutate(
-                            //     product.productId
-                            //   )
-                            // }
+                            onClick={() =>
+                              deleteProductMutation.mutate(
+                                product.productId
+                              )
+                            }
                           >
                             Delete
                           </button>

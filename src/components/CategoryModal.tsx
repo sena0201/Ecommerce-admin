@@ -12,7 +12,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { IoCloseSharp } from "react-icons/io5";
 import { MoonLoader } from "react-spinners";
@@ -38,6 +38,7 @@ const categorySchema = yup.object().shape({
     .required("This field is required"),
   supplierId: yup
     .number()
+    .positive("This field is required")
     .required("This field is required"),
 });
 
@@ -84,10 +85,19 @@ function CategoryModal(props: IProps) {
       toast.error("Error");
     },
   });
-  const { handleSubmit, register, formState } = useForm({
-    resolver: yupResolver(categorySchema),
-  });
+  const { handleSubmit, register, formState, setValue } =
+    useForm({
+      resolver: yupResolver(categorySchema),
+    });
+  useEffect(() => {
+    if (category) {
+      setValue("categoryName", category.categoryName);
+      setValue("description", category.description);
+      setValue("supplierId", category.supplierId);
+    }
+  }, [category, setValue]);
   const onSubmit = (data: Data) => {
+    console.log(data);
     if (isUpdate) {
       updateCategoryMutation.mutate(data);
     } else {
@@ -155,7 +165,7 @@ function CategoryModal(props: IProps) {
             <select
               className="w-full border-2 border-grey rounded-lg outline-none px-2 py-3"
               {...register("supplierId")}
-              value={category?.supplierId}
+              defaultValue={category?.supplierId}
             >
               <option value="0">Select Supplier</option>
               {suppliers?.map((supplier: any) => (
